@@ -13,5 +13,6 @@ target 'WorkoutPlanner' do
 	pod 'Firebase/Firestore'
 	pod 'Firebase/Storage'
 	pod 'RealmSwift'
+	pod 'DropDown'
 
 end

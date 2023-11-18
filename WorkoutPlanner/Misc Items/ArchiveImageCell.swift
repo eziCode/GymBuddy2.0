@@ -22,7 +22,8 @@ class ArchiveImageCell: UICollectionViewCell {
         archiveImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapArchiveImageView)))
         archiveImageView.image = workoutPicture.leadImage
         dateLabel.text = workoutPicture.dateTaken
-        
+        archiveImageView.layer.cornerRadius = 50
+        archiveImageView.contentMode = .scaleAspectFit
     }
     
     weak var delegate: ArchiveImageCellDelegate?

@@ -10,13 +10,21 @@ import Firebase
 import FirebaseFirestore
 import FirebaseAuth
 import FirebaseStorage
+import DropDown
 
 class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
     
     @IBOutlet weak var mainCollectionView: UICollectionView!
     
-    var images: [String: [UIImage]] = [:]
+    var images: [(String, [UIImage])] = []
     var imageReferenceMap: [String: String]? = nil
+    
+    let menu: DropDown = {
+        let menu = DropDown()
+        //Option for menu
+        menu.dataSource = ["Ascending order", "Descending order"]
+        return menu
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +41,6 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
                     if worked {
                         self.mainCollectionView.reloadData()
                     }
-                    //Do something with images (Probably need to move code into data source method)
                 }
             }
         }
@@ -41,14 +48,79 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
     }
 
     func configureFilterButton() {
-        if images.keys.count == 0 {
-            return
-        }
         //Add dropdown menu for either ascending or descending order
+        let filterButton = UIButton()
+        filterButton.setImage(UIImage(systemName: "line.3.horizontal.decrease"), for: .normal)
+        filterButton.tintColor = .black
+        filterButton.addTarget(self, action: #selector(didTapFilterButton), for: .touchUpInside)
         
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(filterButton)
+
+        NSLayoutConstraint.activate([
+            filterButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 3),
+            filterButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            filterButton.widthAnchor.constraint(equalToConstant: 60), // Adjust width as needed
+            filterButton.heightAnchor.constraint(equalToConstant: 60) // Adjust height as needed
+        ])
         
-        //Look through all collection view cells
+        // Set up the menu
+        menu.anchorView = filterButton
+        menu.dataSource = ["Ascending order", "Descending order"]
         
+        menu.selectionAction = { index, title in
+            self.filterSort(index: index, title: title)
+        }
+    }
+    
+    func filterSort(index: Int, title: String) {
+        let dateConverter = DateFormatter()
+        dateConverter.dateFormat = "MMMM d, yyyy"
+        
+        var sortedImagesArray: [(String, [UIImage])] = []
+        
+        switch (index, title) {
+        case(0, "Ascending order"):
+            guard images.count > 1 else { break }
+            //Filter in ascending order
+            let sortedKeys = images.map { $0.0 }.sorted(by: { key1, key2 in
+                guard let date1 = dateConverter.date(from: key1),
+                      let date2 = dateConverter.date(from: key2) else { return false }
+                return date1.compare(date2) == .orderedAscending
+            })
+            // Create a new array of tuples with the sorted keys and non-optional values
+            sortedImagesArray = sortedKeys.compactMap { key in
+                guard let imagesArray = images.first(where: { $0.0 == key })?.1 else { return nil }
+                return (key, imagesArray)
+            }
+        case (1, "Descending order"):
+            guard images.count > 1 else { break }
+            let sortedKeys = images.map { $0.0 }.sorted(by: { key1, key2 in
+                guard let date1 = dateConverter.date(from: key1),
+                      let date2 = dateConverter.date(from: key2) else { return false }
+                return date1.compare(date2) == .orderedDescending
+            })
+            // Create a new array of tuples with the sorted keys and non-optional values
+            sortedImagesArray = sortedKeys.compactMap { key in
+                guard let imagesArray = images.first(where: { $0.0 == key })?.1 else { return nil }
+                return (key, imagesArray)
+            }
+        default:
+            menu.hide()
+            break
+        }
+        
+        images = sortedImagesArray
+        
+        DispatchQueue.main.async {
+            self.mainCollectionView.reloadData()
+        }
+        menu.hide()
+    }
+    
+    @objc func didTapFilterButton() {
+        menu.hide()
+        menu.show()
     }
     
     func retrieveImagesFromReferences(completion: @escaping (Bool) -> Void) {
@@ -70,7 +142,8 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
 
             func handleCompletion() {
                 if let key = imageReferenceMap?.first(where: { $0.value == ref })?.key {
-                    images[key] = imageArray
+                    let tuple = (key, imageArray)
+                    images.append(tuple)
                     // Continue with the next image
                     processNextImage()
                 }
@@ -133,7 +206,7 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
     func didTapArchiveImageViewOpenMenu(key: String) {
         //Configure menu
         let imagePopupMenu = ImagePopupMenu()
-        imagePopupMenu.configureMenu(imageArr: images[key] ?? [UIImage(named: "DefaultImage")!])
+        imagePopupMenu.configureMenu(imageArr: images.first(where: { $0.0 == key })?.1 ?? [UIImage(named: "DefaultImage")!])
         imagePopupMenu.addSwipeCapability()
         present(imagePopupMenu, animated: true, completion: nil)
     }
@@ -143,15 +216,15 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
 
 extension ArchiveVC: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return images.keys.count
+        return images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchiveImageCell", for: indexPath) as! ArchiveImageCell
         
-        let date = Array(images.keys)[indexPath.row]
-        let imagesArray = images[date]
-        guard let firstImage = (imagesArray?[0] ?? UIImage(named: "DefaultImage")) else { return cell }
+        let date = images[indexPath.row].0
+        let imagesArray = images[indexPath.row].1
+        let firstImage = imagesArray[0]
         let workoutPic = WorkoutPicture(dateTaken: date, leadImage: firstImage)
         cell.setup(with: workoutPic)
         cell.delegate = self

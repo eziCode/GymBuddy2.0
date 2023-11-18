@@ -252,14 +252,15 @@
                             <constraint firstItem="sZi-53-yzS" firstAttribute="trailing" secondItem="rOf-2z-jtB" secondAttribute="trailing" id="b17-sK-TDe"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Archive" image="archivebox.fill" catalog="system" selectedImage="archivebox.fill" id="EPe-1S-Fqe"/>
+                    <tabBarItem key="tabBarItem" title="Archive" image="archivebox.fill" catalog="system" selectedImage="archivebox.fill" id="Yeg-Ad-5vm"/>
+                    <navigationItem key="navigationItem" id="WPj-bh-oLg"/>
                     <connections>
                         <outlet property="mainCollectionView" destination="rOf-2z-jtB" id="Iqh-qu-rEh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WZP-Mc-rHs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5139.6946564885493" y="7.746478873239437"/>
+            <point key="canvasLocation" x="6066.4122137404574" y="7.746478873239437"/>
         </scene>
         <!--Profile-->
         <scene sceneID="WI5-ZS-dJa">
@@ -410,7 +411,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="48B-wf-EQy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7406.8702290076335" y="7.746478873239437"/>
+            <point key="canvasLocation" x="8333.5877862595426" y="7.746478873239437"/>
         </scene>
         <!--Entry View Controller-->
         <scene sceneID="yl2-H4-0p3">
@@ -626,10 +627,10 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <segue destination="YL9-zf-Y4e" kind="relationship" relationship="viewControllers" id="iKp-jx-EQo"/>
                         <segue destination="I8q-ai-Kyq" kind="relationship" relationship="viewControllers" id="t38-PH-epC"/>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="kW3-k1-ZP1"/>
                         <segue destination="OPo-7o-CxT" kind="relationship" relationship="viewControllers" id="ia6-uR-xgf"/>
+                        <segue destination="YL9-zf-Y4e" kind="relationship" relationship="viewControllers" id="IGq-iU-Uzz"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SJM-su-uHd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -665,7 +666,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1800.7633587786258" y="7.746478873239437"/>
+            <point key="canvasLocation" x="2381" y="8"/>
         </scene>
         <!--Pull TemplateVC-->
         <scene sceneID="J8i-8S-lLh">
