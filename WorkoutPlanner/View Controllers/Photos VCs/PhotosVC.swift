@@ -244,7 +244,7 @@ class PhotosVC: UIViewController {
                 countdownLabel.isHidden = false
                 countdownTimer?.invalidate()
                 countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateCountdown), userInfo: nil, repeats: true)
-                countdown = 3
+                countdown = 4
             }
         } else if images.count == 2 {
             showPoseAnimation(poseName: "BackBicepPose") { [self] in
@@ -252,7 +252,7 @@ class PhotosVC: UIViewController {
                 countdownLabel.isHidden = false
                 countdownTimer?.invalidate()
                 countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateCountdown), userInfo: nil, repeats: true)
-                countdown = 3
+                countdown = 4
             }
         }
         

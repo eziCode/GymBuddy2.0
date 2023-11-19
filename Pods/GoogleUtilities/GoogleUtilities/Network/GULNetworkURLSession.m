@@ -157,7 +157,7 @@
     session = [NSURLSession sessionWithConfiguration:_sessionConfig
                                             delegate:self
                                        delegateQueue:[NSOperationQueue mainQueue]];
-    postRequestTask = [session uploadTaskWithRequest:request fromData:request.HTTPBody];
+      postRequestTask = [session uploadTaskWithRequest:request fromData:request.HTTPBody];
   }
 
   if (!session || !postRequestTask) {

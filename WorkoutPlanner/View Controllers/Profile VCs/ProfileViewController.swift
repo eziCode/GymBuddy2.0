@@ -453,7 +453,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         db.collection("users").document(currentUser!).getDocument { snapshot, error in
             if error == nil && snapshot != nil {
-                if let creationDate = snapshot?["creationdate"] as? String {
+                if let creationDate = snapshot?["creationDate"] as? String {
                     self.dateJoined = creationDate
                     completion(true)
                 } else {
