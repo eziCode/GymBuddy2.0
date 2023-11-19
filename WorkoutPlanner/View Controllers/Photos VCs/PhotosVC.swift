@@ -215,12 +215,47 @@ class PhotosVC: UIViewController {
     private var countdownTimer: Timer?
     private var countdown: Int = 3
     
+    var posePhotoImageView = UIImageView()
+    
+    func showPoseAnimation(poseName: String, completion: @escaping () -> Void) {
+        posePhotoImageView = UIImageView(image: UIImage(named: poseName))
+        posePhotoImageView.frame = UIScreen.main.bounds
+        view.addSubview(posePhotoImageView)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            // Execute the completion closure after a delay of 2 seconds (adjust the time as needed)
+            self.posePhotoImageView.removeFromSuperview()
+            completion()
+        }
+    }
+    
     @objc private func didTapTakePhoto() {
-        countdownLabel.text = "\(countdown)"
-        countdownLabel.isHidden = false
-        countdownTimer?.invalidate()
-        countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateCountdown), userInfo: nil, repeats: true)
-        countdown = 3
+        if images.count == 0 {
+            showPoseAnimation(poseName: "FrontDoubleBicep") { [self] in
+                countdownLabel.text = "\(countdown)"
+                countdownLabel.isHidden = false
+                countdownTimer?.invalidate()
+                countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateCountdown), userInfo: nil, repeats: true)
+                countdown = 3
+            }
+        } else if images.count == 1 {
+            showPoseAnimation(poseName: "FrontLatSpread") { [self] in
+                countdownLabel.text = "\(countdown)"
+                countdownLabel.isHidden = false
+                countdownTimer?.invalidate()
+                countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateCountdown), userInfo: nil, repeats: true)
+                countdown = 3
+            }
+        } else if images.count == 2 {
+            showPoseAnimation(poseName: "BackBicepPose") { [self] in
+                countdownLabel.text = "\(countdown)"
+                countdownLabel.isHidden = false
+                countdownTimer?.invalidate()
+                countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateCountdown), userInfo: nil, repeats: true)
+                countdown = 3
+            }
+        }
+        
     }
     
     @objc func updateCountdown() {
