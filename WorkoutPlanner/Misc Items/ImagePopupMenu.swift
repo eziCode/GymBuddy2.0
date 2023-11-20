@@ -38,6 +38,8 @@ class ImagePopupMenu: UIViewController {
             let xCoordinate = view.frame.width * CGFloat(index)
             contentWidth += view.frame.width
             
+            swipeImageView.contentMode = .scaleAspectFit
+            
             scrollView.addSubview(swipeImageView)
             swipeImageView.frame = CGRect(x: xCoordinate, y: 0, width: view.frame.width, height: view.frame.height)
         }
