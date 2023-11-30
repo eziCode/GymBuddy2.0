@@ -30,6 +30,7 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
         super.viewDidLoad()
         
         configureFilterButton()
+        configureRefreshButton()
         
         mainCollectionView.dataSource = self
         mainCollectionView.delegate = self
@@ -39,7 +40,45 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
             if success {
                 retrieveImagesFromReferences { worked in
                     if worked {
+                        
                         self.mainCollectionView.reloadData()
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    func configureRefreshButton() {
+        let refreshButton: UIButton = {
+            let button = UIButton()
+            button.setImage(UIImage(named: "RefreshImage"), for: .normal)
+            button.tintColor = .black
+            return button
+        }()
+        refreshButton.translatesAutoresizingMaskIntoConstraints = false
+        refreshButton.addTarget(self, action: #selector(didTapRefreshButton), for: .touchUpInside)
+        
+        view.addSubview(refreshButton)
+        NSLayoutConstraint.activate([
+            refreshButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 3),
+            refreshButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            refreshButton.widthAnchor.constraint(equalToConstant: 60), // Adjust width as needed
+            refreshButton.heightAnchor.constraint(equalToConstant: 60) // Adjust height as needed
+        ])
+    }
+    
+    @objc func didTapRefreshButton() {
+        self.images.removeAll()
+        self.imageReferenceMap?.removeAll()
+        
+        retrieveImageReferenceMap { [self] success in
+            if success {
+                retrieveImagesFromReferences { worked in
+                    if worked {
+                        DispatchQueue.main.async {
+                            self.mainCollectionView.reloadData()
+                        }
                     }
                 }
             }
