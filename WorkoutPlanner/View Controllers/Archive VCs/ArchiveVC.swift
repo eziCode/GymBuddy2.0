@@ -12,7 +12,7 @@ import FirebaseAuth
 import FirebaseStorage
 import DropDown
 
-class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
+class ArchiveVC: UIViewController, ArchiveImageCellDelegate, PhotosVcDelegate {
     
     @IBOutlet weak var mainCollectionView: UICollectionView!
     
@@ -22,6 +22,8 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
         button.tintColor = .black
         return button
     }()
+    
+    var uploadInProgress: Bool = false
     
     var images: [(String, [UIImage])] = []
     var imageReferenceMap: [String: String]? = nil
@@ -43,17 +45,23 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
         mainCollectionView.delegate = self
         mainCollectionView.collectionViewLayout = UICollectionViewFlowLayout()
         
-        retrieveImageReferenceMap { [self] success in
-            if success {
-                retrieveImagesFromReferences { worked in
-                    if worked {
-                        
-                        self.mainCollectionView.reloadData()
+        if !uploadInProgress {
+            retrieveImageReferenceMap { [self] success in
+                if success {
+                    retrieveImagesFromReferences { worked in
+                        if worked {
+                            
+                            self.mainCollectionView.reloadData()
+                        }
                     }
                 }
             }
         }
         
+    }
+    
+    func didFinishPhotoShoot(inProgress: Bool) {
+        uploadInProgress = inProgress
     }
     
     func configureRefreshButton() {
@@ -70,24 +78,25 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
     }
     
     @objc func didTapRefreshButton() {
-        self.refreshButton.isEnabled = false
-        self.images.removeAll()
-        self.imageReferenceMap?.removeAll()
-        self.mainCollectionView.reloadData()
-        
-        retrieveImageReferenceMap { [self] success in
-            if success {
-                retrieveImagesFromReferences { worked in
-                    if worked {
-                        DispatchQueue.main.async {
-                            self.mainCollectionView.reloadData()
+        if !uploadInProgress {
+            self.refreshButton.isEnabled = false
+            self.images.removeAll()
+            self.imageReferenceMap?.removeAll()
+            self.mainCollectionView.reloadData()
+            
+            retrieveImageReferenceMap { [self] success in
+                if success {
+                    retrieveImagesFromReferences { worked in
+                        if worked {
+                            DispatchQueue.main.async {
+                                self.mainCollectionView.reloadData()
+                            }
                         }
                     }
                 }
+                refreshButton.isEnabled = true
             }
-            refreshButton.isEnabled = true
         }
-        
     }
 
     func configureFilterButton() {

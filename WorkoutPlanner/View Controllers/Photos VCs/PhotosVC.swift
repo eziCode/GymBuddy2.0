@@ -11,7 +11,13 @@ import FirebaseFirestore
 import Firebase
 import FirebaseStorage
 
+protocol PhotosVcDelegate {
+    func didFinishPhotoShoot(inProgress: Bool)
+}
+
 class PhotosVC: UIViewController {
+    
+    var delegate: PhotosVcDelegate?
     
     var images = [UIImage]()
     
@@ -275,6 +281,7 @@ class PhotosVC: UIViewController {
     }
     
     func uploadWorkoutPicturesToFirestoreDatabase() {
+        self.delegate?.didFinishPhotoShoot(inProgress: true)
         var imageCount = 0
         let currentUser = Auth.auth().currentUser?.uid
         let dateFormatter = DateFormatter()
@@ -333,6 +340,7 @@ class PhotosVC: UIViewController {
                 }
             }
         }
+        self.delegate?.didFinishPhotoShoot(inProgress: false)
     }
     
     func updateRecentDateOfWorkoutPictures() {
