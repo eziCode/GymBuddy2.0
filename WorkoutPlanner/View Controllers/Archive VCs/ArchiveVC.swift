@@ -16,6 +16,13 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
     
     @IBOutlet weak var mainCollectionView: UICollectionView!
     
+    let refreshButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "RefreshImage"), for: .normal)
+        button.tintColor = .black
+        return button
+    }()
+    
     var images: [(String, [UIImage])] = []
     var imageReferenceMap: [String: String]? = nil
     
@@ -50,12 +57,6 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
     }
     
     func configureRefreshButton() {
-        let refreshButton: UIButton = {
-            let button = UIButton()
-            button.setImage(UIImage(named: "RefreshImage"), for: .normal)
-            button.tintColor = .black
-            return button
-        }()
         refreshButton.translatesAutoresizingMaskIntoConstraints = false
         refreshButton.addTarget(self, action: #selector(didTapRefreshButton), for: .touchUpInside)
         
@@ -69,8 +70,10 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
     }
     
     @objc func didTapRefreshButton() {
+        self.refreshButton.isEnabled = false
         self.images.removeAll()
         self.imageReferenceMap?.removeAll()
+        self.mainCollectionView.reloadData()
         
         retrieveImageReferenceMap { [self] success in
             if success {
@@ -82,6 +85,7 @@ class ArchiveVC: UIViewController, ArchiveImageCellDelegate {
                     }
                 }
             }
+            refreshButton.isEnabled = true
         }
         
     }
@@ -260,13 +264,16 @@ extension ArchiveVC: UICollectionViewDataSource, UICollectionViewDelegateFlowLay
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArchiveImageCell", for: indexPath) as! ArchiveImageCell
-        
-        let date = images[indexPath.row].0
-        let imagesArray = images[indexPath.row].1
-        let firstImage = imagesArray[0]
-        let workoutPic = WorkoutPicture(dateTaken: date, leadImage: firstImage)
-        cell.setup(with: workoutPic)
-        cell.delegate = self
+        do {
+            let date = images[indexPath.row].0
+            let imagesArray = images[indexPath.row].1
+            let firstImage = imagesArray[0]
+            let workoutPic = WorkoutPicture(dateTaken: date, leadImage: firstImage)
+            cell.setup(with: workoutPic)
+            cell.delegate = self
+        } catch {
+            return cell
+        }
         
         
         return cell

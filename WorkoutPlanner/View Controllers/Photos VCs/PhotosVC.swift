@@ -218,13 +218,15 @@ class PhotosVC: UIViewController {
     var posePhotoImageView = UIImageView()
     
     func showPoseAnimation(poseName: String, completion: @escaping () -> Void) {
+        countdownLabel.removeFromSuperview()
         posePhotoImageView = UIImageView(image: UIImage(named: poseName))
         posePhotoImageView.frame = UIScreen.main.bounds
         view.addSubview(posePhotoImageView)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [self] in
             // Execute the completion closure after a delay of 2 seconds (adjust the time as needed)
             self.posePhotoImageView.removeFromSuperview()
+            view.addSubview(countdownLabel)
             completion()
         }
     }
@@ -265,10 +267,6 @@ class PhotosVC: UIViewController {
         if countdown <= 0 {
             countdownTimer?.invalidate()
             takePhoto()
-            //TODO: After picture is taken, send to firebase server and restart picture taking process
-            //TODO: Create a label that show what pose for the user to get into (Maybe create a animation)
-            //Structure: /workoutPictures/userID/Date/
-            //self.uploadWorkoutPictureToFirestoreDatabase()
         }
     }
     
