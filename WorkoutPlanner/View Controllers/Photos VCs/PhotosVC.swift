@@ -10,6 +10,7 @@ import AVFoundation
 import FirebaseFirestore
 import Firebase
 import FirebaseStorage
+import Vision
 
 protocol PhotosVcDelegate {
     func didFinishPhotoShoot(inProgress: Bool)
@@ -20,6 +21,8 @@ class PhotosVC: UIViewController {
     var delegate: PhotosVcDelegate?
     
     var images = [UIImage]()
+    
+    var validImagesDict: [Int: Bool] = [0: true, 1: true, 2: true]
     
     @IBOutlet var backgroundView: UIView!
     
@@ -425,8 +428,75 @@ extension PhotosVC: AVCapturePhotoCaptureDelegate {
             tabBarController?.tabBar.isHidden = false
             uploadWorkoutPicturesToFirestoreDatabase()
             updateRecentDateOfWorkoutPictures()
+            //Closes AVCapture Session
+            session?.stopRunning()
+            session = nil
+            
+            //Use vision to find coordinates of key body parts and check if they are in the correct position
+            for img in images {
+                img.detectBodyParts { observations, error in
+                    if let error = error {
+                        print("Error occured: \(error)")
+                    } else if let observations = observations {
+                        for i in 0...2 {
+                            //Access coordinates of body parts
+                            let keyPointLocations = try? observations[i].recognizedPoints(forGroupKey: .all)
+                            
+                            //Check what image is being analyzed
+                            if i == 0 {
+                                
+                            } else if i == 1 {
+                                
+                            } else {
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if validImagesDict.allSatisfy({ $0.value == true}) {
+                previewLayer.isHidden = true
+                countdownLabel.isHidden = true
+                takePhotoImageView.image = UIImage(named: "notPictureTimeImage")
+                takePhotoImageView.layer.borderColor = CGColor(red: 255/255, green: 0, blue: 0, alpha: 1)
+                takePhotoImageView.layer.borderWidth = 2
+                takePhotoImageView.layer.cornerRadius = 5
+                takePhotoImageView.isUserInteractionEnabled = false
+                backgroundView.backgroundColor = UIColor(red: 235/255, green: 236/255, blue: 238/255, alpha: 1)
+                previewLayer.removeFromSuperlayer()
+                tabBarController?.tabBar.isHidden = false
+                uploadWorkoutPicturesToFirestoreDatabase()
+                updateRecentDateOfWorkoutPictures()
+            } else {
+                //TODO: Close out of window and show a popup menu that says error and prompts retake
+            }
+            
         }
         
     }
 }
 
+extension UIImage {
+    func detectBodyParts(completion: @escaping ([VNHumanBodyPoseObservation]?, Error?) -> Void) {
+        guard let ciImage = CIImage(image: self) else {
+            completion(nil, NSError(domain: "UIImageExtensionError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to create CIImage from UIImage."]))
+            return
+        }
+
+        let request = VNDetectHumanBodyPoseRequest()
+
+        let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
+
+        do {
+            try handler.perform([request])
+            if let observations = request.results {
+                completion(observations, nil)
+            } else {
+                completion(nil, NSError(domain: "UIImageExtensionError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to get body pose observations."]))
+            }
+        } catch {
+            completion(nil, error)
+        }
+    }
+}
