@@ -413,28 +413,42 @@ extension PhotosVC: AVCapturePhotoCaptureDelegate {
             //Maybe present animation here later
             didTapTakePhoto()
         } else {
-            //Closes AVCapture Session
             session?.stopRunning()
             session = nil
             
+            
             //Use vision to find coordinates of key body parts and check if they are in the correct position
-            for img in images {
-                img.detectBodyParts { observations, error in
-                    if let error = error {
-                        print("Error occured: \(error)")
+            for i in 0...2 {
+                images[i].detectBodyParts { observations, error in
+                    if (error != nil) || (observations?.count == 0) {
+                        print("Error occured")
+                        print("Observations: \(String(describing: observations))")
+                        //self.validImagesDict = self.validImagesDict.mapValues { _ in false }
                     } else if let observations = observations {
-                        for i in 0...2 {
-                            //Access coordinates of body parts
-                            let keyPointLocations = try? observations[i].recognizedPoints(forGroupKey: .all)
+                        let keyPointLocations = try? observations[0].recognizedPoints(forGroupKey: .all)
+                        //Check what image is being analyzed
+                        if i == 0 {
+                            let jointNames: [VNHumanBodyPoseObservation.JointName] = [
+                                .rightWrist,
+                                .rightElbow,
+                                .leftWrist,
+                                .leftElbow
+                            ]
                             
-                            //Check what image is being analyzed
-                            if i == 0 {
-                                
-                            } else if i == 1 {
-                                
-                            } else {
-                                
+                            let rightWristLocation = keyPointLocations?[jointNames[0].rawValue]?.location
+                            let rightElbowLocation = keyPointLocations?[jointNames[1].rawValue]?.location
+                            let leftWristLocation = keyPointLocations?[jointNames[2].rawValue]?.location
+                            let leftElbowLocation = keyPointLocations?[jointNames[3].rawValue]?.location
+                            
+                            if (rightWristLocation?.y ?? 1 < rightElbowLocation?.y ?? 0) || (leftWristLocation?.y ?? 1 < leftElbowLocation?.y ?? 0) {
+                                self.validImagesDict[i] = false
                             }
+                            
+                        } else if i == 1 {
+                            
+                            
+                        } else {
+                            
                         }
                     }
                 }
@@ -455,6 +469,7 @@ extension PhotosVC: AVCapturePhotoCaptureDelegate {
                 updateRecentDateOfWorkoutPictures()
             } else {
                 //TODO: Close out of window and show a popup menu that says error and prompts retake
+                print("false")
             }
             
         }
