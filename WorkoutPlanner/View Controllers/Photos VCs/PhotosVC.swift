@@ -418,6 +418,7 @@ extension PhotosVC: AVCapturePhotoCaptureDelegate {
             
             
             //Use vision to find coordinates of key body parts and check if they are in the correct position
+            //TODO: Image 2 and 3 process algorithm needs testing
             for i in 0...2 {
                 images[i].detectBodyParts { observations, error in
                     if (error != nil) || (observations?.count == 0) {
@@ -427,28 +428,38 @@ extension PhotosVC: AVCapturePhotoCaptureDelegate {
                     } else if let observations = observations {
                         let keyPointLocations = try? observations[0].recognizedPoints(forGroupKey: .all)
                         //Check what image is being analyzed
+                        
+                        let jointNames: [VNHumanBodyPoseObservation.JointName] = [
+                            .rightWrist,
+                            .rightElbow,
+                            .rightEar,
+                            .leftWrist,
+                            .leftElbow,
+                            .leftEar
+                        ]
+                        
+                        let rightWristLocation = keyPointLocations?[jointNames[0].rawValue]?.location
+                        let rightElbowLocation = keyPointLocations?[jointNames[1].rawValue]?.location
+                        let rightEarLocation = keyPointLocations?[jointNames[2].rawValue]?.location
+                        let leftWristLocation = keyPointLocations?[jointNames[3].rawValue]?.location
+                        let leftElbowLocation = keyPointLocations?[jointNames[4].rawValue]?.location
+                        let leftEarLocation = keyPointLocations?[jointNames[5].rawValue]?.location
+                        
                         if i == 0 {
-                            let jointNames: [VNHumanBodyPoseObservation.JointName] = [
-                                .rightWrist,
-                                .rightElbow,
-                                .leftWrist,
-                                .leftElbow
-                            ]
-                            
-                            let rightWristLocation = keyPointLocations?[jointNames[0].rawValue]?.location
-                            let rightElbowLocation = keyPointLocations?[jointNames[1].rawValue]?.location
-                            let leftWristLocation = keyPointLocations?[jointNames[2].rawValue]?.location
-                            let leftElbowLocation = keyPointLocations?[jointNames[3].rawValue]?.location
-                            
                             if (rightWristLocation?.y ?? 1 < rightElbowLocation?.y ?? 0) || (leftWristLocation?.y ?? 1 < leftElbowLocation?.y ?? 0) {
                                 self.validImagesDict[i] = false
                             }
                             
                         } else if i == 1 {
+                            if (rightWristLocation?.y ?? 0 > rightElbowLocation?.y ?? 1) || (leftWristLocation?.y ?? 0 > leftElbowLocation?.y ?? 1) {
+                                self.validImagesDict[i] = false
+                            }
+
                             
-                            
-                        } else {
-                            
+                        } else if i == 2 {
+                            if (rightWristLocation?.y ?? 1 < rightElbowLocation?.y ?? 0) || (leftWristLocation?.y ?? 1 < leftElbowLocation?.y ?? 0) {
+                                self.validImagesDict[i] = false
+                            }                            
                         }
                     }
                 }
@@ -469,7 +480,23 @@ extension PhotosVC: AVCapturePhotoCaptureDelegate {
                 updateRecentDateOfWorkoutPictures()
             } else {
                 //TODO: Close out of window and show a popup menu that says error and prompts retake
-                print("false")
+                previewLayer.isHidden = true
+                countdownLabel.isHidden = true
+                takePhotoImageView.image = UIImage(named: "notPictureTimeImage")
+                takePhotoImageView.layer.borderColor = CGColor(red: 255/255, green: 0, blue: 0, alpha: 1)
+                takePhotoImageView.layer.borderWidth = 2
+                takePhotoImageView.layer.cornerRadius = 5
+                takePhotoImageView.isUserInteractionEnabled = false
+                backgroundView.backgroundColor = UIColor(red: 235/255, green: 236/255, blue: 238/255, alpha: 1)
+                previewLayer.removeFromSuperlayer()
+                tabBarController?.tabBar.isHidden = false
+                
+                //TODO: Needs testing
+                let imageErrorIndex = validImagesDict.firstIndex(where: { $0.value == false }).map { validImagesDict.distance(from: validImagesDict.startIndex, to: $0) + 1 }
+                let alertController = UIAlertController(title: "Incorrect Position: Image \(String(describing: imageErrorIndex))", message: "Please retake photos", preferredStyle: .alert)
+                let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                alertController.addAction(dismissAction)
+                self.present(alertController, animated: true, completion: nil)
             }
             
         }
