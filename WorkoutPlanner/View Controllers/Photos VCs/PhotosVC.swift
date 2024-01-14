@@ -454,12 +454,11 @@ extension PhotosVC: AVCapturePhotoCaptureDelegate {
                             if (rightWristLocation?.y ?? 0 > rightElbowLocation?.y ?? 1) || (leftWristLocation?.y ?? 0 > leftElbowLocation?.y ?? 1) {
                                 self.validImagesDict[i] = false
                             }
-
-                            
+  
                         } else if i == 2 {
                             if (rightWristLocation?.y ?? 1 < rightElbowLocation?.y ?? 0) || (leftWristLocation?.y ?? 1 < leftElbowLocation?.y ?? 0) {
                                 self.validImagesDict[i] = false
-                            }                            
+                            }
                         }
                     }
                 }
