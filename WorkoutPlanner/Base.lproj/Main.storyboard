@@ -29,15 +29,10 @@
                                 <rect key="frame" x="16" y="410" width="361" height="151"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QKi-gl-Kpo">
-                                        <rect key="frame" x="154" y="59" width="55" height="35"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="play.rectangle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Zsh-we-UjG">
+                                        <rect key="frame" x="97" y="37" width="168" height="78"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="play.rectangle" catalog="system"/>
-                                        <connections>
-                                            <action selector="imageCollectionButton:" destination="I8q-ai-Kyq" eventType="touchUpInside" id="Bbh-57-hx5"/>
-                                        </connections>
-                                    </button>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.60732886900000005" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
@@ -190,7 +185,7 @@
                         <outlet property="TopAnchorPullTemplate" destination="w0P-LK-S0y" id="NLe-la-P22"/>
                         <outlet property="TopAnchorPushTemplate" destination="SWr-i4-Lso" id="u1k-5z-mFW"/>
                         <outlet property="imageCollectionBackgroud" destination="UYC-nr-0hY" id="qz3-HA-ylc"/>
-                        <outlet property="imageCollectionButton" destination="QKi-gl-Kpo" id="jb8-f0-Kea"/>
+                        <outlet property="imageCollectionImageView" destination="Zsh-we-UjG" id="siD-dg-RHA"/>
                         <outlet property="legsTemplate" destination="gnB-in-udd" id="ytF-dw-fXx"/>
                         <outlet property="mainStackView" destination="jSa-Zq-Ae4" id="zw6-qs-31M"/>
                         <outlet property="newTemplateCreationMenu" destination="sRf-pb-c8E" id="XDh-cM-XzH"/>

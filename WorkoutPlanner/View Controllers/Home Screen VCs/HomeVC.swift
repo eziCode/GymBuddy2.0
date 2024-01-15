@@ -15,10 +15,7 @@ class HomeVC: UIViewController, TemplateVCDelegate {
     
     @IBOutlet weak var imageCollectionBackgroud: UIView!
     
-    @IBOutlet weak var imageCollectionButton: UIButton!
-    
-    @IBAction func imageCollectionButton(_ sender: Any) {
-    }
+    @IBOutlet weak var imageCollectionImageView: UIImageView!
     
     @IBOutlet weak var pushTemplate: UIView!
     @IBOutlet weak var pullTemplate: UIView!
@@ -173,6 +170,8 @@ class HomeVC: UIViewController, TemplateVCDelegate {
 
     func setupStartingConfiguration() {
         imageCollectionBackgroud.translatesAutoresizingMaskIntoConstraints = false
+        imageCollectionImageView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             //Menu constraints
             newTemplateCreationMenu.heightAnchor.constraint(equalToConstant: ((699/852)*view.frame.height)),
@@ -195,10 +194,10 @@ class HomeVC: UIViewController, TemplateVCDelegate {
             imageCollectionBackgroud.heightAnchor.constraint(equalToConstant: (151/852)*view.frame.height),
             
             //Image Collection Button
-            //imageCollectionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            //imageCollectionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            //imageCollectionButton.widthAnchor.constraint(equalTo: imageCollectionBackgroud.widthAnchor),
-            //imageCollectionButton.heightAnchor.constraint(equalTo: imageCollectionBackgroud.heightAnchor),
+            imageCollectionImageView.centerXAnchor.constraint(equalTo: imageCollectionBackgroud.centerXAnchor),
+            imageCollectionImageView.centerYAnchor.constraint(equalTo: imageCollectionBackgroud.centerYAnchor),
+            imageCollectionImageView.widthAnchor.constraint(equalToConstant: (168/393)*view.frame.width),
+            imageCollectionImageView.heightAnchor.constraint(equalToConstant: (81/852)*view.frame.height),
             
             //Main stack view constaints
             mainStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
@@ -308,13 +307,5 @@ extension HomeVC: UITableViewDataSource {
            default:
                return .white
            }
-    }
-}
-
-extension UIImage {
-    func resized(to size: CGSize) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { _ in
-            draw(in: CGRect(origin: .zero, size: size))
-        }
     }
 }
