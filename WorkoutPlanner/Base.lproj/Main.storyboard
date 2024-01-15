@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tcu-Hi-Tws">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tcu-Hi-Tws">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <accessibilityOverrides dynamicTypePreference="2"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -24,6 +24,22 @@
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="119"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.83921568627450982" green="0.0" blue="0.0039215686274509803" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UYC-nr-0hY">
+                                <rect key="frame" x="16" y="410" width="361" height="151"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QKi-gl-Kpo">
+                                        <rect key="frame" x="154" y="59" width="55" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="play.rectangle" catalog="system"/>
+                                        <connections>
+                                            <action selector="imageCollectionButton:" destination="I8q-ai-Kyq" eventType="touchUpInside" id="Bbh-57-hx5"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.60732886900000005" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="35" translatesAutoresizingMaskIntoConstraints="NO" id="jSa-Zq-Ae4">
                                 <rect key="frame" x="13" y="59" width="367" height="289"/>
@@ -173,6 +189,8 @@
                         <outlet property="TopAnchorNewTemplateCreationMenu" destination="zK0-XC-zMC" id="p7w-H5-8S8"/>
                         <outlet property="TopAnchorPullTemplate" destination="w0P-LK-S0y" id="NLe-la-P22"/>
                         <outlet property="TopAnchorPushTemplate" destination="SWr-i4-Lso" id="u1k-5z-mFW"/>
+                        <outlet property="imageCollectionBackgroud" destination="UYC-nr-0hY" id="qz3-HA-ylc"/>
+                        <outlet property="imageCollectionButton" destination="QKi-gl-Kpo" id="jb8-f0-Kea"/>
                         <outlet property="legsTemplate" destination="gnB-in-udd" id="ytF-dw-fXx"/>
                         <outlet property="mainStackView" destination="jSa-Zq-Ae4" id="zw6-qs-31M"/>
                         <outlet property="newTemplateCreationMenu" destination="sRf-pb-c8E" id="XDh-cM-XzH"/>
@@ -1015,6 +1033,7 @@
         <image name="person.fill" catalog="system" width="128" height="120"/>
         <image name="photo.stack.fill" catalog="system" width="126" height="128"/>
         <image name="pictureTimeImage" width="640" height="534.33331298828125"/>
+        <image name="play.rectangle" catalog="system" width="128" height="93"/>
         <image name="plus.rectangle.fill" catalog="system" width="128" height="93"/>
         <namedColor name="AccentColor">
             <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

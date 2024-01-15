@@ -13,6 +13,13 @@ class HomeVC: UIViewController, TemplateVCDelegate {
     
     var tapCounts: [Int] = []
     
+    @IBOutlet weak var imageCollectionBackgroud: UIView!
+    
+    @IBOutlet weak var imageCollectionButton: UIButton!
+    
+    @IBAction func imageCollectionButton(_ sender: Any) {
+    }
+    
     @IBOutlet weak var pushTemplate: UIView!
     @IBOutlet weak var pullTemplate: UIView!
     @IBOutlet weak var legsTemplate: UIView!
@@ -165,6 +172,7 @@ class HomeVC: UIViewController, TemplateVCDelegate {
     }
 
     func setupStartingConfiguration() {
+        imageCollectionBackgroud.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             //Menu constraints
             newTemplateCreationMenu.heightAnchor.constraint(equalToConstant: ((699/852)*view.frame.height)),
@@ -180,10 +188,23 @@ class HomeVC: UIViewController, TemplateVCDelegate {
             LegsButton.widthAnchor.constraint(equalToConstant: (213.67/393)*view.frame.width),
             PullButton.widthAnchor.constraint(equalToConstant: (213.67/393)*view.frame.width),
             
+            //Image Collection Background
+            imageCollectionBackgroud.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageCollectionBackgroud.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: (50/852)*view.frame.height),
+            imageCollectionBackgroud.widthAnchor.constraint(equalToConstant: (361/393)*view.frame.width),
+            imageCollectionBackgroud.heightAnchor.constraint(equalToConstant: (151/852)*view.frame.height),
+            
+            //Image Collection Button
+            //imageCollectionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            //imageCollectionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            //imageCollectionButton.widthAnchor.constraint(equalTo: imageCollectionBackgroud.widthAnchor),
+            //imageCollectionButton.heightAnchor.constraint(equalTo: imageCollectionBackgroud.heightAnchor),
+            
             //Main stack view constaints
             mainStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         topView.roundCornerView(corners: [.bottomLeft, .bottomRight], radius: (20/119)*topView.frame.height)
+        imageCollectionBackgroud.layer.cornerRadius = 30
         PullButton.layer.borderColor = CGColor(red: 235, green: 235, blue: 235, alpha: 0.25)
         LegsButton.layer.borderColor = CGColor(red: 235, green: 235, blue: 235, alpha: 0.25)
         PushButton.layer.borderColor = CGColor(red: 235, green: 235, blue: 235, alpha: 0.25)
@@ -287,5 +308,13 @@ extension HomeVC: UITableViewDataSource {
            default:
                return .white
            }
+    }
+}
+
+extension UIImage {
+    func resized(to size: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { _ in
+            draw(in: CGRect(origin: .zero, size: size))
+        }
     }
 }
