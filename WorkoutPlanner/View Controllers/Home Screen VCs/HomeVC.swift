@@ -172,6 +172,10 @@ class HomeVC: UIViewController, TemplateVCDelegate {
         imageCollectionBackgroud.translatesAutoresizingMaskIntoConstraints = false
         imageCollectionImageView.translatesAutoresizingMaskIntoConstraints = false
         
+        imageCollectionBackgroud.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImageCollection)))
+        imageCollectionImageView.isUserInteractionEnabled = true
+        imageCollectionImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImageCollection)))
+        
         NSLayoutConstraint.activate([
             //Menu constraints
             newTemplateCreationMenu.heightAnchor.constraint(equalToConstant: ((699/852)*view.frame.height)),
